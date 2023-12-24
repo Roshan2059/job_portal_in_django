@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Welcome to the Job Portal!</h1>
+  <p class="lead">
+    Find your dream job or talented individuals to join your team.
+  </p>
+  <!-- Add more content as needed -->
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2>Latest Jobs</h2>
+    {% for job in jobs %}
+    <div class="card" style="width: 18rem">
+      <div class="card-body">
+        <h5 class="card-title">{{job.title}} - {{job.company_name}}</h5>
+        <a href="/job/{{job.id}}" class="btn btn-primary"
+          >View Details &raquo;</a
+        >
+      </div>
+    </div>
+    {% endfor %}
+    <!-- Display latest job listings here -->
+  </div>
+  <div class="col-md-6">
+    <h2>Featured Employers</h2>
+    {% if companies|length == 0 %} No featured employers at this time. Please
+    check back later. {% else %} {% for company in companies|slice:":3" %}
+
+    <div class="media mb-4 text-muted">
+      <img
+        src="https://via.placeholder.com/150x150?text=Company+Logo"
+        alt=""
+        class="mr-3 rounded"
+      />
+      <div class="media-body pb-3">
+        <h5 class="mt-0 font-weight-bold">{{company.name}}</h5>
+        <p>{{company.description | slice:":100" }}...</p>
+        <a href="/employer/{{company.id}}" class="stretched-link">Learn More</a>
+      </div>
+    </div>
+    {% endfor %} {% endif %}
+
+    <!-- Display featured employers here -->
+  </div>
+</div>
+{% endblock %}
