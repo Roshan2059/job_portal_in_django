@@ -20,6 +20,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('home.urls')),  # Assuming 'home' is the app name for the home page
+    path('auth/', include('authentication.urls')),
+    path('', include('home.urls')),  
+    # Assuming 'home' is the app name for the home page
 ]
 
