@@ -6,27 +6,27 @@
     <form method="post">
       {% csrf_token %}
       <div class="form-group">
-        <label for="username">First Name:</label>
+        <label for="firstname">First Name:</label>
         <input
           type="text"
           class="form-control"
-          id="username"
-          name="username"
+          id="firstname"
+          name="firstname"
           required
         />
       </div>
       <div class="form-group">
-        <label for="username">Last Name:</label>
+        <label for="lastname">Last Name:</label>
         <input
           type="text"
           class="form-control"
-          id="username"
-          name="username"
+          id="lastname"
+          name="lastname"
           required
         />
       </div>
-      <label for="username">I want to register as:</label>
-      <select class="custom-select">
+      <label for="role">I want to register as:</label>
+      <select class="custom-select" id="role" name="role">
         <option value="employer">Employer</option>
         <option value="jobseeker">JobSeeker</option></select
       ><br /><br />
