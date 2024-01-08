@@ -1,42 +1,23 @@
+from django import forms
 from home.models import Job, JobApplication, Employer, JobSeeker
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from django.contrib import messages
-
+from django.shortcuts import render, get_object_or_404
 # Create your views here.
 def signup(request):
-    if request.method == 'POST':
-        # Get the user info from the form data
-        fn = request.POST.get("first_name")
-        ln = request.POST.get("lastname")
-        un = request.POST.get("username")
-        em = request.POST.get("email")
-        # role = request.POST.get("role")
-        pw1 = request.POST.get("password")
-        pw2 = request.POST.get("confirm_password")
-
-        if pw1 == pw2:
-            if User.objects.filter(email=em).exists():
-                messages.info(request, 'This Email Already Taken')
-                return redirect('signup')
-            elif User.objects.filter(username=un).exists():
-                messages.info(request, 'Username Already Taken')
-                return redirect('signup')
-            else:
-                user = User.objects.create_user(username=un, password=pw1, email=em, first_name=fn, last_name=ln)
-                user.save()
-                print('User created')
-                return redirect('login')
-        else:
-            messages.info(request, "Passwords don't match!")
-            return redirect('signup')
+    if request.method == 'GET':
+        return render(request, 'register.html')
     else:
-        return render(request, "register.html")
-
+        # Get the user info from the form data
+        fn = request.POST['firstname']
+        ln = request.POST['lastname']
+        un = request.POST['username']
+        em = request.POST['email']
+        role = request.POST['role']
+        pw1 = request.POST['password']
+        pw2 = request.POST['confirm_password']
 
 def login(request):
     # Your login logic here
