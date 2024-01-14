@@ -9,49 +9,97 @@ from django.contrib import messages
 from django.contrib.auth import logout
 # Create your views here.
 
-def signup(request):
-    if request.method == 'GET':
-        return render(request, 'register.html')
-    else:
-        # if forms.is_valid():
-        # Get the user info from the form data
-            fn = request.POST['firstname']
-            ln = request.POST['lastname']
-            un = request.POST['username']
-            em = request.POST['email']
-            role = request.POST['role']
-            pw = request.POST['password']
+# def signup(request):
+#     if request.method == 'GET':
+#         return render(request, 'register.html')
+#     else:
+#         # if forms.is_valid():
+#         # Get the user info from the form data
+#             fn = request.POST['firstname']
+#             ln = request.POST['lastname']
+#             un = request.POST['username']
+#             em = request.POST['email']
+#             role = request.POST['role']
+#             pw = request.POST['password']
             
-            try:
-                User.objects.create_user(first_name = fn, last_name = ln, username=un, email=em, role=role, password=pw )
-                return redirect('login')
-            except:
-                messages.error(request, "please fill the form properly")
-                return redirect('signup')
+#             try:
+#                 User.objects.create_user(first_name = fn, last_name = ln, username=un, email=em, role=role, password=pw )
+#                 return redirect('login')
+#             except:
+#                 messages.error(request, "please fill the form properly")
+#                 return redirect('signup')
         
+
+# def login(request):
+#     if request.method == "GET":
+#         return render(request, 'login.html')
+#     else:
+#         username=request.POST["username"]
+#         password=request.POST["password"]
+#         # Checking for employers and job seekers
+        
+# # def user_login(request):
+# #     if request.method == 'POST':
+# #         username = request.POST.get('username')
+# #         password = request.POST.get('password')
+# #         user = authenticate(username=username, password=password)
+# #         if user:
+# #             login(request, user)
+# #             return redirect('home')  # Redirect to the home page or any desired page after login
+# #         else:
+# #             # Handle invalid login credentials here (e.g., show error message)
+# #             return render(request, 'login.html', {'error': 'Invalid username or password'})
+# #     return render(request, 'login.html')
+
+# def logout_view(request):
+#     logout(request)
+#     return redirect('login.html')
+
+
+def signup(request):
+    if request.method == 'POST':
+        # Get the user info from the form data
+        fn = request.POST.get("first_name")
+        ln = request.POST.get("lastname")
+        un = request.POST.get("username")
+        em = request.POST.get("email")
+        role = request.POST.get("role")
+        pw1 = request.POST.get("password")
+        pw2 = request.POST.get("confirm_password")
+
+        if pw1 == pw2:
+            if User.objects.filter(email=em).exists():
+                messages.info(request, 'This Email Already Taken')
+                return redirect('signup')
+            elif User.objects.filter(username=un).exists():
+                messages.info(request, 'Username Already Taken')
+                return redirect('signup')
+            else:
+                user = User.objects.create_user(username=un, password=pw1, email=em, first_name=fn, last_name=ln, position=role)
+                user.save()
+                print('User created')
+                return redirect('login')
+        else:
+            messages.info(request, "Passwords don't match!")
+            return redirect('signup')
+    else:
+        return render(request, "register.html")
+
 
 def login(request):
-    if request.method == "GET":
-        return render(request, 'login.html')
-    else:
-        username=request.POST["username"]
-        password=request.POST["password"]
-        # Checking for employers and job seekers
-        
-# def user_login(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(username=username, password=password)
-#         if user:
-#             login(request, user)
-#             return redirect('home')  # Redirect to the home page or any desired page after login
-#         else:
-#             # Handle invalid login credentials here (e.g., show error message)
-#             return render(request, 'login.html', {'error': 'Invalid username or password'})
-#     return render(request, 'login.html')
+    # Your login logic here
+    if request.method == 'POST':
+        # Process login form submission
+        username = request.POST['username']
+        password = request.POST['password']
 
-def logout_view(request):
-    logout(request)
-    return redirect('login.html')
-        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            # Redirect to a success page
+            return redirect('/')
+        else:
+            messages.info(request,'invalid credentials')
+            return redirect('login')
+    else:
+        return render(request,"login.html")
