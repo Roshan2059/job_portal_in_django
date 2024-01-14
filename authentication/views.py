@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import logout
 # Create your views here.
 
 def signup(request):
@@ -17,9 +18,10 @@ def signup(request):
             fn = request.POST['firstname']
             ln = request.POST['lastname']
             un = request.POST['username']
-            # em = request.POST['email']
+            em = request.POST['email']
             role = request.POST['role']
             pw = request.POST['password']
+            
             try:
                 User.objects.create_user(first_name = fn, last_name = ln, username=un, email=em, role=role, password=pw )
                 return redirect('login')
@@ -27,7 +29,6 @@ def signup(request):
                 messages.error(request, "please fill the form properly")
                 return redirect('signup')
         
-    
 
 def login(request):
     if request.method == "GET":
@@ -37,34 +38,6 @@ def login(request):
         password=request.POST["password"]
         # Checking for employers and job seekers
         
-# def signup(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             role = request.POST.get('role')  # Fetch the selected role from the form
-#             user = form.save()
-            
-#             if role == 'employer':
-#                 Employer.objects.create(user=user, company_name=username)
-#                 # Additional fields for employer
-#                 authenticated_user = authenticate(username=username, password=password)
-#                 if authenticated_user:
-#                     login(request, authenticated_user)
-#                     return redirect('employer_dashboard')  # Redirect to employer dashboard
-#             elif role == 'job_seeker':
-#                 JobSeeker.objects.create(user=user, name=username)
-#                 # Additional fields for job seeker
-#                 authenticated_user = authenticate(username=username, password=password)
-#                 if authenticated_user:
-#                     login(request, authenticated_user)
-#                     return redirect('job_seeker_dashboard')  # Redirect to job seeker dashboard
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'signup.html', {'form': form})
-
-
 # def user_login(request):
 #     if request.method == 'POST':
 #         username = request.POST.get('username')
@@ -78,7 +51,7 @@ def login(request):
 #             return render(request, 'login.html', {'error': 'Invalid username or password'})
 #     return render(request, 'login.html')
 
-# def logout_view(request):
-#     logout(request)
-#     return redirect('login.html')
+def logout_view(request):
+    logout(request)
+    return redirect('login.html')
         
