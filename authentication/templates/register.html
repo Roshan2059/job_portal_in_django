@@ -24,8 +24,8 @@
         <input
           type="text"
           class="form-control"
-          id="username"
-          name="username"
+          id="firstname"
+          name="firstname"
           required
         />
       </div>
@@ -39,10 +39,10 @@
           required
         />
       </div>
-      <label for="username">I want to register as:</label>
-      <select class="custom-select">
-        <option value="employer">Employer</option>
-        <option value="jobseeker">JobSeeker</option></select
+      <label for="role">I want to register as:</label>
+      <select class="custom-select" name="role">
+        <option value="EMP">Employer</option>
+        <option value="JS">JobSeeker</option></select
       ><br /><br />
       <div class="form-group">
         <label for="username">Username</label>
@@ -75,7 +75,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="confirm_password">Conform Password</label>
+        <label for="confirm_password">Confirm Password</label>
         <input
           type="password"
           class="form-control"

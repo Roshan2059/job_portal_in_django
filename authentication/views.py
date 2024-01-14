@@ -1,12 +1,18 @@
 from django import forms
 from home.models import Job, JobApplication, Employer, JobSeeker
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import login as auth_login
+
+
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 # Create your views here.
 
 # def signup(request):
@@ -51,15 +57,11 @@ from django.contrib.auth import logout
 # #             return render(request, 'login.html', {'error': 'Invalid username or password'})
 # #     return render(request, 'login.html')
 
-# def logout_view(request):
-#     logout(request)
-#     return redirect('login.html')
-
 
 def signup(request):
     if request.method == 'POST':
         # Get the user info from the form data
-        fn = request.POST.get("first_name")
+        fn = request.POST.get("firstname")
         ln = request.POST.get("lastname")
         un = request.POST.get("username")
         em = request.POST.get("email")
@@ -77,8 +79,13 @@ def signup(request):
             else:
                 user = User.objects.create_user(username=un, password=pw1, email=em, first_name=fn, last_name=ln, position=role)
                 user.save()
-                print('User created')
-                return redirect('login')
+                # print('User created')
+                if user is not None:
+                    if user.position == "EMP":
+                        auth_login(request, user)
+                        return redirect('emp-dash')
+                    elif user.position == "jobseeker":
+                        return redirect('home')
         else:
             messages.info(request, "Passwords don't match!")
             return redirect('signup')
@@ -96,10 +103,16 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            # Redirect to a success page
-            return redirect('/')
+            if user.position == "JS":
+                return redirect('home')
+            elif user.position == "EMP":
+                return redirect('empdash')
         else:
             messages.info(request,'invalid credentials')
             return redirect('login')
     else:
         return render(request,"login.html")
+    
+def logout_view(request):
+    logout(request)
+    return redirect('login.html')

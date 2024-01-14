@@ -21,7 +21,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('', include('home.urls')),  
+    path('', include('home.urls')),
+    path('employer/', include('employer.urls'))
     # Assuming 'home' is the app name for the home page
 ]
 
